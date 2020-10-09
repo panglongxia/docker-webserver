@@ -1,0 +1,45 @@
+version: "3.7"
+services:
+  phpfpm71:
+    image: panglongxia/php-fpm-7.1:v1.0.0
+    container_name: phpfpm71
+    stdin_open: true
+    tty: true
+    privileged: true
+    volumes:
+      - "../phpfpm71/etc:/usr/local/etc" # 挂载配置文件
+      - "../phpfpm71/log:/usr/local/var/log" # 挂载日志文件
+      - "/Users/panglongxia/work/code/dev-project/wwwroot:/var/www/html"
+    networks: ## 引入外部预先定义的网段
+      webserver_panglongxia:
+        ipv4_address: 172.23.7.2   #设置ip地址
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1g"
+  nginx:
+    image: panglongxia/nginx1.19:latest
+    container_name: nginx1.19
+    stdin_open: true
+    tty: true
+    privileged: true
+    volumes:
+      #这里容器里的目录注意填写Dockerfile 中 SOFTWARE_DIR 的目录
+      - "../nginx/conf:/software/nginx/conf" #配置文件
+      - "../nginx/log:/software/nginx/log" # 挂载日志文件
+    ports:
+      - "80:80"
+    networks: ## 引入外部预先定义的网段
+      webserver_panglongxia:
+        ipv4_address: 172.23.7.3   #设置ip地址
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1g"
+networks:
+  # 自定义网络
+  webserver_panglongxia:
+    driver: bridge
+    ipam: #定义网段
+      config:
+        - subnet: "172.23.7.0/24"
