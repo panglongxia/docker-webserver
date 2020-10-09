@@ -10,7 +10,7 @@ docker build -t php-fpm71 .
 cd ~/docker-images/nginx1.19
 docker build -t nginx .
 ```
-创建容器
+创建镜像名
 ```
 cd ~/docker-compose
 # 记得去修改容器名，以及挂载目录
