@@ -10,10 +10,10 @@ services:
       - "../phpfpm71/etc:/usr/local/etc" # 挂载配置文件
       - "../phpfpm71/log:/usr/local/var/log" # 挂载日志文件
       - "/Users/panglongxia/work/code/dev-project/wwwroot:/var/www/html"
-    networks: ## 引入外部预先定义的网段
-      webserver_panglongxia:
+    networks:
+      webserver_network:
         ipv4_address: 172.23.7.2   #设置ip地址
-    logging:
+    logging:  #限制容器日志大小,可以不加
       driver: "json-file"
       options:
         max-size: "1g"
@@ -29,16 +29,16 @@ services:
       - "../nginx/log:/software/nginx/log" # 挂载日志文件
     ports:
       - "80:80"
-    networks: ## 引入外部预先定义的网段
+    networks:
       webserver_panglongxia:
         ipv4_address: 172.23.7.3   #设置ip地址
-    logging:
+    logging: #限制容器日志大小,可以不加
       driver: "json-file"
       options:
         max-size: "1g"
-networks:
+networks: #限制容器大小
   # 自定义网络
-  webserver_panglongxia:
+  webserver_network:
     driver: bridge
     ipam: #定义网段
       config:
