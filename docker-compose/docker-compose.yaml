@@ -9,7 +9,7 @@ services:
     volumes:
       - "../phpfpm71/etc:/usr/local/etc" # 挂载配置文件
       - "../phpfpm71/log:/usr/local/var/log" # 挂载日志文件
-      - "/Users/panglongxia/work/code/dev-project/wwwroot:/var/www/html"
+      - "/Users/panglongxia/work/code/dev-project/wwwroot:/var/www/html" #php 代码放置的位置
     networks:
       webserver_network:
         ipv4_address: 172.23.7.2   #设置ip地址
@@ -27,10 +27,11 @@ services:
       #这里容器里的目录注意填写Dockerfile 中 SOFTWARE_DIR 的目录
       - "../nginx/conf:/software/nginx/conf" #配置文件
       - "../nginx/log:/software/nginx/log" # 挂载日志文件
+      - "/Users/panglongxia/work/code/dev-project/wwwroot:/var/www/html" # 这里也要挂载进去，要不然访问不到到静态文件哦
     ports:
       - "80:80"
     networks:
-      webserver_panglongxia:
+      webserver_network:
         ipv4_address: 172.23.7.3   #设置ip地址
     logging: #限制容器日志大小,可以不加
       driver: "json-file"
