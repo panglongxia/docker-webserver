@@ -1,5 +1,6 @@
 FROM php:7.1-fpm-stretch
 ENV TZ=Asia/Shanghai
+ENV GIT_XHPROF_URL=https://github.com/longxinH/xhprof.git
 # 换源
 RUN sed -i "s@/deb.debian.org/@/mirrors.aliyun.com/@g" /etc/apt/sources.list \
   && apt-get -y update --assume-yes \
@@ -8,6 +9,8 @@ RUN sed -i "s@/deb.debian.org/@/mirrors.aliyun.com/@g" /etc/apt/sources.list \
                         libjpeg62-turbo-dev \
                         libpng-dev \
                         procps \
+                        git \
+                        graphviz \
   && apt-get -y --assume-yes install curl \
                         libbz2-dev \
                         libcurl4-openssl-dev \
@@ -50,6 +53,7 @@ RUN sed -i "s@/deb.debian.org/@/mirrors.aliyun.com/@g" /etc/apt/sources.list \
                             gettext \
                             pcntl \
                             shmop \
+  && git clone $GIT_XHPROF_URL /usr/src/xhprof && mv /usr/src/xhprof/extension /usr/src/php/ext/xhprof && docker-php-ext-install xhprof \
   && cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
   # 时间
   && echo $TZ > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata \
@@ -57,7 +61,7 @@ RUN sed -i "s@/deb.debian.org/@/mirrors.aliyun.com/@g" /etc/apt/sources.list \
   && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
   # 减少镜像大小
   && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/src/xhprof
 
 
 

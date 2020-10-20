@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   phpfpm71:
-    image: panglongxia/php-fpm-7.1:v1.0.0
+    image: panglongxia/php-fpm-7.1:v1.0.1
     container_name: phpfpm71
     stdin_open: true
     tty: true
@@ -37,6 +37,17 @@ services:
       driver: "json-file"
       options:
         max-size: "1g"
+  redis:
+    image: redis:5.0.9
+    container_name: redis-local
+    stdin_open: true
+    tty: true
+    privileged: true
+    ports:
+      - "6379:6379"
+    networks:
+      webserver_network:
+        ipv4_address: 172.23.7.4   #设置ip地址
 networks: #限制容器大小
   # 自定义网络
   webserver_network:
